@@ -8,6 +8,7 @@ export AUTO_NOTIFY_THRESHOLD=10
 export AUTO_NOTIFY_IGNORE=(
     "vim" "nvim" "less" "more" "man" "tig" "watch" "git commit" "top" "htop" "ssh" "nano"
 )
+export AUTO_NOTIFY_ICON='stock_task'
 
 function _auto_notify_format() {
     local MESSAGE="$1"
@@ -31,6 +32,7 @@ function _auto_notify_message() {
 
     local title="${AUTO_NOTIFY_TITLE:-$DEFAULT_TITLE}"
     local text="${AUTO_NOTIFY_BODY:-$DEFAULT_BODY}"
+    local icon="${AUTO_NOTIFY_ICON}"
 
     title="$(_auto_notify_format "$title" "$command" "$elapsed" "$exit_code")"
     body="$(_auto_notify_format "$text" "$command" "$elapsed" "$exit_code")"
@@ -40,7 +42,7 @@ function _auto_notify_message() {
         if [[ "$exit_code" != "0" ]]; then
             urgency="critical"
         fi
-        notify-send "$title" "$body" --app-name=zsh "--urgency=$urgency" "--expire-time=$AUTO_NOTIFY_EXPIRE_TIME"
+        notify-send "$title" "$body" --app-name=zsh "--urgency=$urgency" "--icon=$icon" "--expire-time=$AUTO_NOTIFY_EXPIRE_TIME"
     elif [[ "$platform" == "Darwin" ]]; then
         osascript \
           -e 'on run argv' \
